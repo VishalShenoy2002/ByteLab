@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block body %}
+<div class="row-flex">
+
+    <section class="question-section" id="question-section">
+        {{ question }}
+        <div>
+            <label id="language-label">{{ language }}</label>
+            
+        </div>
+    </section>
+    <section class="code-section" id="code-section">
+        <div class="code-editor" id="code-editor"></div>
+        
+        <button class="small button" id="submit-button">
+            <label for="">Submit</label>
+            <i class="fa-solid fa-circle-arrow-right"></i>
+        </button>
+
+    </section>
+</div>
+    
+{% endblock %}
