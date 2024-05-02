@@ -1,0 +1,30 @@
+{% extends "dashboard.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<div class="row-flex" style="gap: 3rem ;">
+    <a href="/manage-questions" class="link">
+        <div class="card" style="min-width: 175px;">
+            <i class="fa-regular fa-circle-question icon"></i>
+            <label for="">Manage Questions</label>
+        </div>
+    </a>
+    <a href="/manage-students" class="link">
+        <div class="card" style="min-width: 175px;">
+            <i class="fa-solid fa-user icon"></i>
+            <label for="">Manage Students</label>
+        </div>
+    </a>
+    <a href="/view-sumissions" class="link">
+        <div class="card" style="min-width: 175px;">
+            <i class="fa-solid fa-circle-arrow-right icon"></i>
+            <label for="">View Submissions</label>
+        </div>
+    </a>
+    <a href="/reporting-and-analysis" class="link">
+        <div class="card" style="min-width: 175px;">
+            <i class="fa-solid fa-chart-line icon"></i>
+            <label for="">Reporting and Analysis</label>
+        </div>
+    </a>
+</div>
+{% endblock %}
