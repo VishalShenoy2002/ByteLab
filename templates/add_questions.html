@@ -1,0 +1,13 @@
+{% extends "dashboard.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<div class="large container">
+    <form class="large" method="post">
+        <textarea name="question" id="question_input" class="large" placeholder="Question"></textarea><br>
+        <input type="text" name="semester" id="semester_input" placeholder="Semester"><br>
+        <input type="text" name="programming_language" id="programming_language_input" placeholder="Programming Language"><br>
+        <button type="submit" class="button">Add Question</button>
+    </form>
+</div>
+
+{% endblock %}
