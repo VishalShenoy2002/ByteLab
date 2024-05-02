@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block body %}
+<div class="medium container">
+    <h1>Register</h1>
+    <form action="" method="post">
+        <input type="text" name="fullname-registration" id="fullname-registration-input" placeholder="Fullname">
+        <input type="email" name="email-registration" id="email-registration-input" placeholder="Email">
+        <input type="password" name="password-registration" id="password-registration-input" placeholder="Password">
+        <input type="password" name="confirm-password-registration" id="confirm-password-registration-input" placeholder="Confirm Password"><br>
+        <button type="submit" class="button">Register</button>
+        <a href="/login" class="row-flex">
+            <i></i>
+            Have an Account
+        </a>
+    </form>
+</div>
+{% endblock %}
