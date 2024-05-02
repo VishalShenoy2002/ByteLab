@@ -1,0 +1,41 @@
+input[type="email"], input[type="text"], input[type="password"],textarea{
+    width: 70%;
+    padding: 0.5rem;
+    
+    background-color: transparent;
+    color: var(--primary);
+    font-family: var(--font-family-02);
+
+    border: 0px;
+    border-bottom: 0.1rem solid var(--primary);
+    outline: none;
+    
+}
+
+input[type="email"]::placeholder, input[type="text"]::placeholder, input[type="password"]::placeholder,textarea::placeholder{
+    color: var(--primary-glass);
+}
+
+select{
+    width: 30%;
+    padding: 0.5rem;
+
+    background-color: transparent;
+    color: var(--text);
+    outline: none;
+    border: 0px;
+
+    font-family: var(--font-family-02);
+    font-weight: 500;
+
+}
+
+option{
+    background-color: var(--background);
+    color: var(--accent);
+}
+
+option:active{
+    background-color: var(--primary);
+    color: var(--text);
+}
