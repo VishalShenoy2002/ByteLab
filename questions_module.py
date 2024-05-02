@@ -17,3 +17,44 @@ class Question:
         cursor.execute(query)
         conn.commit()
         del query
+        
+class QuestionRetriever:
+    
+    def __init__(self) -> None:
+        pass
+        
+    def get_by_programming_language(self,programming_language:str):
+        self.programming_language = programming_language
+        query = f'SELECT * FROM questions WHERE programming_language="{self.programming_language}";'
+        cursor.execute(query)  
+        records = cursor.fetchall()
+        
+        del query
+        return records
+        
+    def get_by_semester(self,semester:int):
+        self.semester = semester
+        query = f'SELECT * FROM questions WHERE semester={self.semester};'
+        cursor.execute(query)  
+        records = cursor.fetchall()
+        
+        del query
+        return records
+        
+    def get_by_semester(self,semester:int):
+        self.semester = semester
+        query = f'SELECT * FROM questions WHERE semester={self.semester};'
+        cursor.execute(query)  
+        records = cursor.fetchall()
+        
+        del query
+        return records
+        
+    def get_by_subject(self,subject:str):
+        self.subject = subject
+        query = f'SELECT * FROM questions WHERE semester="{self.subject}";'
+        cursor.execute(query)  
+        records = cursor.fetchall()
+        
+        del query
+        return records
