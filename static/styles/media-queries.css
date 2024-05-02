@@ -1,0 +1,45 @@
+@media (prefers-color-scheme: light) {
+    :root {
+        --text: #0d021d;
+        --background: #f2ecfe;
+        --primary: #310881;
+        --secondary: #bcf665;
+        --accent: #0dde56;
+
+        --primary-glass: #31088150;
+        --secondary-glass: #bcf66550;
+        --accent-glass: #0dde5650;
+
+        --color-01: #d1603d;
+        --color-02: #ddb967;
+        --color-03: #d0e37f;
+        --color-04: #ffd046;
+        --color-05: #7dde92;
+
+        --font-family-01: "Righteous", sans-serif;
+        --font-family-02: "Poppins", sans-serif;
+        
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #ece0fd;
+        --background: #080114;
+        --primary: #a67df7;
+        --secondary: #619b09;
+        --accent: #21f26b;
+        
+        --primary-glass: #a67df750;
+        --secondary-glass: #619b0950;
+        --accent-glass: #21f26b50;
+        
+        --color-01: #d1603d;
+        --color-02: #ddb967;
+        --color-03: #d0e37f;
+        --color-04: #ffd046;
+        --color-05: #7dde92;
+
+        --font-family-01: "Righteous", sans-serif;
+        --font-family-02: "Poppins", sans-serif;
+    }
+}
