@@ -1,0 +1,24 @@
+{% extends "dashboard.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<div class="row-flex" style="gap: 3rem;">
+    <a href="/manage-questions/add" class="link">
+        <div class="card" style="min-width: 175px;">
+            <i class="fa-solid fa-plus icon"></i>
+            <label for="">Add Question</label>
+        </div>
+    </a>
+    <a href="/manage-questions/view" class="link">
+        <div class="card" style="min-width: 175px;">
+            <i class="fa-solid fa-eye icon"></i>
+            <label for="">View Question</label>
+        </div>
+    </a>
+    <a href="/manage-questions/delete" class="link">
+        <div class="card" style="min-width: 175px;">
+            <i class="fa-solid fa-trash-can icon"></i>
+            <label for="">Delete Question</label>
+        </div>
+    </a>
+</div>
+{% endblock %}
