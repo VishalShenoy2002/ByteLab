@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block body %}
+<div class=" medium container">
+    <h1>Login</h1>
+    <form action="" method="post">
+        <input type="text" name="rollno-login" id="rollno-login-input" placeholder="UUCMS Registration Number">
+        <input type="password" name="password-login" id="password-login-input" placeholder="Password"><br>
+        <button type="submit" class="button">Login</button>
+        <a href="/register" class="row-flex">
+            <i></i>
+            Don't have an Account
+        </a>
+    </form>
+</div>
+{% endblock %}
