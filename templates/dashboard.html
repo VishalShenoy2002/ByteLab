@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block body %}
+<header>
+    <nav class="full navbar">
+        <div class="nav-logo">
+            <h3 style="color: var(--primary);">ByteLab</h3>
+        </div>
+        <ul class="nav-items">
+            <li class="nav-item">
+                <a href="#">Home</a>
+            </li>
+            <li class="nav-item">
+                <a href="#">My Account</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="page-hero">
+    <h1 id="page-hero-title" style="font-family: var(--font-family-01);">{{ page_hero_title }}</h1>
+    <video muted autoplay loop class="page-hero-video" >
+        <source src="{{ page_hero_video }}">
+    </video>
+</div>
+<main class="full">
+    {% block main %}{% endblock %}
+</main>
+{% endblock %}
