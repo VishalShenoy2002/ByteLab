@@ -1,0 +1,33 @@
+{% extends "dashboard.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<div class="large container">
+    <form class="large" method="post">
+        <input type="number" name="semester" id="semester-input" min="1" max="6" placeholder="Semester" class="small">
+        <input type="text" name="subject" id="subject-input" placeholder="Subject"><br>
+        <button type="submit" class="button">Search</button>
+    </form>
+    <br><br>
+    {% if questions != [] %}
+        <div class="large">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Question ID</th>
+                        <th>Subject Code</th>
+                        <th>Semester</th>
+                        <th>Programming Language</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>Lorem ipsum dolor sit amet.</p>
+    
+    {% endif %}
+</div>
+
+{% endblock %}
