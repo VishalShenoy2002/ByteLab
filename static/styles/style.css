@@ -35,6 +35,34 @@ main{
 
 }
 
+table {
+    font-size: 1rem;
+    border: 3px solid var(--secondary); /* Border of the table */
+    border-collapse: collapse;
+    padding: 1rem;
+}
+
+thead {
+    color: var(--primary);
+    border-collapse: collapse;
+    padding: 1rem;
+}
+
+thead th {
+    border-bottom: 3px solid var(--secondary); 
+    padding: 1rem;
+}
+
+tr {
+    border-bottom: 3px solid var(--secondary); 
+    padding: 1rem;
+}
+
+tr:last-child {
+    border-bottom: none; 
+    padding: 1rem;
+}
+
 .code-editor{
     height: 85vh;
     width: 70vw;
