@@ -52,9 +52,19 @@ class QuestionRetriever:
         
     def get_by_subject(self,subject:str):
         self.subject = subject
-        query = f'SELECT * FROM questions WHERE semester="{self.subject}";'
+        query = f'SELECT * FROM questions WHERE subject="{self.subject}";'
         cursor.execute(query)  
         records = cursor.fetchall()
         
+        del query
+        return records
+    
+    def get_by_subject_and_semester(self,subject:str, semester:int):
+        self.subject =subject
+        self.semester = semester
+        query = f'SELECT * FROM questions WHERE subject="{self.subject}" and semester={self.semester};'
+        cursor.execute(query)  
+        records = cursor.fetchall()
+
         del query
         return records
