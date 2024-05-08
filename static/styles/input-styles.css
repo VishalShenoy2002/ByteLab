@@ -1,4 +1,4 @@
-input[type="email"], input[type="text"], input[type="password"],textarea{
+input[type="email"], input[type="text"], input[type="password"], input[type="number"], textarea{
     width: 70%;
     padding: 0.5rem;
     
@@ -12,8 +12,14 @@ input[type="email"], input[type="text"], input[type="password"],textarea{
     
 }
 
-input[type="email"]::placeholder, input[type="text"]::placeholder, input[type="password"]::placeholder,textarea::placeholder{
+input[type="email"]::placeholder, input[type="text"]::placeholder, input[type="password"]::placeholder,input[type="number"]::placeholder,textarea::placeholder{
     color: var(--primary-glass);
+}
+
+input[type="radio"], input[type="checkbox"]{
+    accent-color: var(--primary);
+    width: 1.2rem;
+    height: 1.2rem;
 }
 
 select{
@@ -33,6 +39,8 @@ select{
 option{
     background-color: var(--background);
     color: var(--accent);
+    border: none;
+    outline: none;
 }
 
 option:active{
