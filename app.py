@@ -3,7 +3,7 @@ from flask import render_template
 from flask import request, redirect
 from flask import jsonify
 
-from questions_module import Question
+from questions_module import Question, QuestionRetriever
  
 
 app = Flask(__name__)
@@ -23,8 +23,7 @@ def index():
 def saveCode():
     code = request.form['code']
     language = request.form['language']
-
-    # print(output)
+    
     return 'Code saved'
 
 @app.route("/login",methods=["GET","POST"])
@@ -68,6 +67,22 @@ def add_questions_page():
         question.insert_into_questions_table()
 
         return render_template("add_questions.html",title="Manage Questions | Add",page_hero_title="Add Question")
+
+@app.route('/manage-questions/view',methods=["GET","POST"])
+def view_questions_page():
+    if request.method == "GET":
+        return render_template("view_questions.html",title="Manage Questions | View",page_hero_title="View Questions",questions=[])
+    
+    elif request.method == "POST":
+        form_data = request.form
+        semester = form_data.get('semester')
+        subject = form_data.get('subject')
+        
+        retriever = QuestionRetriever()
+        records = retriever.get_by_subject_and_semester(subject=subject,semester=semester)
+        
+        return render_template("view_questions.html",title="Manage Questions | View",page_hero_title="View Questions",questions=records)
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True)
