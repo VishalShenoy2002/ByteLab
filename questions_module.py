@@ -12,7 +12,7 @@ class Question:
         self.subject = subject
     
     def insert_into_questions_table(self):
-        query = f"INSERT INTO questions(question,semester,programming_language) VALUES (\"{self.question}\", {self.semester}, \"{self.programming_language}\");"
+        query = f"INSERT INTO questions(question,subject_code,semester,programming_language) VALUES (\"{self.question}\", \"{self.subject}\",{self.semester}, \"{self.programming_language}\");"
         print(query)
         cursor.execute(query)
         conn.commit()
@@ -52,7 +52,7 @@ class QuestionRetriever:
         
     def get_by_subject(self,subject:str):
         self.subject = subject
-        query = f'SELECT * FROM questions WHERE subject="{self.subject}";'
+        query = f'SELECT * FROM questions WHERE subject_code="{self.subject}";'
         cursor.execute(query)  
         records = cursor.fetchall()
         
@@ -62,7 +62,7 @@ class QuestionRetriever:
     def get_by_subject_and_semester(self,subject:str, semester:int):
         self.subject =subject
         self.semester = semester
-        query = f'SELECT * FROM questions WHERE subject="{self.subject}" and semester={self.semester};'
+        query = f'SELECT * FROM questions WHERE subject_code="{self.subject}" and semester={self.semester};'
         cursor.execute(query)  
         records = cursor.fetchall()
 
