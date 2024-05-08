@@ -1,0 +1,25 @@
+{% extends "dashboard.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<div class="row-flex" style="gap: 3rem;">
+    <a href="/admin-dashboard/add-course" class="link">
+        <div class="card" style="min-width: 175px;">
+            <i class="fa-solid fa-graduation-cap icon"></i>
+            <label for="">Add Course</label>
+        </div>
+    </a>
+    <a href="/admin-dashboard/add-subject" class="link">
+        <div class="card" style="min-width: 175px;">
+            <i class="fa-solid fa-book icon"></i>
+            <label for="">Add Subject</label>
+        </div>
+    </a>
+    <a href="/admin-dashboard/add-faculty" class="link">
+        <div class="card" style="min-width: 175px;">
+            <i class="fa-solid fa-user-plus icon"></i>
+            <label for="">Add Faculty</label>
+        </div>
+    </a>
+    
+</div>
+{% endblock %}
