@@ -7,27 +7,36 @@
         <input type="text" name="subject" id="subject-input" placeholder="Subject"><br>
         <button type="submit" class="button">Search</button>
     </form>
-    <br><br>
+    <br>
+    <h2>Records</h2>
     {% if questions != [] %}
-        <div class="large">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Question ID</th>
-                        <th>Subject Code</th>
-                        <th>Semester</th>
-                        <th>Programming Language</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-        </div>
-    {% else %}
-        <p>Lorem ipsum dolor sit amet.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Question ID</th>
+                    <th>Subject Code</th>
+                    <th>Question</th>
+                    <th>Semester</th>
+                    <th>Programming Language</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question_id, subject_code, question, semester, programming_language in questions %}
+                <tr>
+                    <td>{{ question_id }}</td>
+                    <td>{{ subject_code }}</td>
+                    <td>{{ question }}</td>
+                    <td>{{ semester }}</td>
+                    <td>{{ programming_language }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     
+    {% else %}
+        <p>No Record Found</p>
+
     {% endif %}
-</div>
+</div>       
 
 {% endblock %}
