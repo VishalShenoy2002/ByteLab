@@ -6,10 +6,19 @@ from flask import jsonify
 from questions_module import Question, QuestionRetriever
 from course_module import Course
 from subject_module import Subject, SubjectRetriever
- 
+from student_module import Student
+
+
+import os
+from werkzeug.utils import secure_filename
+import csv
+
+if os.path.isdir(os.path.join(os.getcwd(),"uploads")) == False:
+    os.makedirs(os.path.join(os.getcwd(),"uploads"))
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config['UPLOAD_FOLDER']=os.path.join(os.getcwd(),"uploads")
 
 @app.route("/editor")
 def editor():
@@ -39,7 +48,8 @@ def registration_page():
     
     elif request.method == "POST":
         return redirect("/login")
-    
+
+# Dashboard Routes 
 @app.route('/faculty-dashboard',methods=["GET","POST"])
 def faculty_dashboard_page():
     if request.method == "GET":
@@ -49,13 +59,13 @@ def faculty_dashboard_page():
 def admin_dashboard_page():
     if request.method == "GET":
         return render_template("admin-dashboard.html",title="ByteLab | Admin Dashboard",page_hero_title="Admin Dashboard")
-        
+
+# Faculty Dashboard Routes 
 @app.route('/faculty-dashboard/manage-questions',methods=["GET"])
 def manage_questions_page():
     if request.method == "GET":
-        return render_template("manage_questions.html",title="ByteLab | Manage Questions",page_hero_title="Manage Questions")
-    
-    
+        return render_template("manage_questions.html",title="Faculty Dashboard | Manage Questions",page_hero_title="Manage Questions")
+       
 @app.route('/faculty-dashboard/manage-questions/add',methods=["GET","POST"])
 def add_questions_page():
     if request.method == "GET":
@@ -98,7 +108,43 @@ def view_questions_page():
         
         return render_template("view_questions.html",title="Manage Questions | View",page_hero_title="View Questions",questions=records)
 
+@app.route('/faculty-dashboard/manage-students',methods=['GET','POST'])
+def manage_students_page():
+    if request.method == "GET":
+        return render_template("manage_students.html",title="Faculty Dashboard | Manage Students",page_hero_title="Manage Students")
 
+@app.route('/faculty-dashboard/manage-students/add',methods=['GET','POST'])
+def add_batch_page():
+    if request.method == "GET":
+        return render_template("add_batch.html",title="Manage Students | Add",page_hero_title="Add Batch")
+    
+    elif request.method == "POST":
+        batch_file = request.files.get('batch_file')
+        if os.path.isdir(os.path.join(app.config['UPLOAD_FOLDER'],"csv")) == False:
+            os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'],"csv"))
+            
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'],"csv",secure_filename(batch_file.filename))
+        batch_file.save(file_path)
+    
+        with open(file_path) as f:
+            reader = csv.DictReader(f)
+            for record in reader:
+                student = Student()
+                
+                student.uucms_no = record.get('uucms_no')
+                student.name = record.get('name')
+                student.course = record.get('course')
+                student.semester = record.get('semester')
+                student.batch = record.get('batch')
+                
+                student.add_student_to_db()
+                print("added {student.uucms_no}")
+            f.close()
+        os.remove(file_path)
+        return render_template("add_batch.html",title="Manage Students | Add",page_hero_title="Add Batch")
+
+        
+# Admin Dashboard Routes
 @app.route('/admin-dashboard/add-course',methods=["GET","POST"])
 def add_course_page():
     if request.method == "GET":
