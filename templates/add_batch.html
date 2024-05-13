@@ -1,0 +1,11 @@
+{% extends "dashboard.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<div class="large container">
+    <form class="large" method="post" enctype="multipart/form-data">
+        <input type="file" name="batch_file" id="batch_file_input">
+        <button type="submit" class="button">Add Batch</button>
+    </form>
+</div>
+
+{% endblock %}
