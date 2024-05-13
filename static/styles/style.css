@@ -1,5 +1,6 @@
 @import url('./media-queries.css');
 @import url("./input-styles.css");
+@import url("./webkits.css");
 @import url("./imports.css");
 
 html{
@@ -252,5 +253,5 @@ tr:last-child {
 }
 
 .card:hover{
-    transform: scale(1.05);
+    transform: scale(1.125);
 }
