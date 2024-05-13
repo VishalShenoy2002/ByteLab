@@ -1,0 +1,13 @@
+::-webkit-file-upload-button{
+    font-family: var(--font-family-02);
+    font-size: 1rem;
+    background-color: var(--primary);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 0.2rem;
+    /* padding: 0.1rem; */
+}
+::-webkit-file-upload-button:hover{
+    background-color: var(--primary-glass);
+}
