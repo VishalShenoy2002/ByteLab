@@ -1,0 +1,24 @@
+{% extends "dashboard.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<div class="row-flex" style="gap: 3rem;">
+    <a href="/faculty-dashboard/manage-students/add" class="link">
+        <div class="card" style="min-width: 175px;">
+            <i class="fa-solid fa-user icon"></i>
+            <label for="">Add Batch</label>
+        </div>
+    </a>
+    <a href="/faculty-dashboard/manage-students/view" class="link">
+        <div class="card" style="min-width: 175px;">
+            <i class="fa-solid fa-list icon"></i>
+            <label for="">View Batch</label>
+        </div>
+    </a>
+    <a href="/faculty-dashboard/manage-students/delete" class="link">
+        <div class="card" style="min-width: 175px;">
+            <i class="fa-solid fa-trash-can icon"></i>
+            <label for="">Delete Batch</label>
+        </div>
+    </a>
+</div>
+{% endblock %}
