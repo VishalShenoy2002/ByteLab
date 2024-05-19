@@ -15,7 +15,7 @@ class Subject:
         subject_code ="".join([x[0] for x in self.subject_name.strip().split(' ')])
         return subject_code
     
-    def insert_into_table(self):
+    def add_to_db(self):
         query = f'INSERT INTO subjects(subject_code,subject_name,course_name,semester) VALUES("{self.subject_code}","{self.subject_name}","{self.course_name}",{self.semester});'
         cursor.execute(query)
         conn.commit()
