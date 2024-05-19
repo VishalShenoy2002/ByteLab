@@ -1,17 +1,19 @@
 from flask import Flask
 from flask import render_template
 from flask import request, redirect
-from flask import jsonify
+from flask import session
 
 from questions_module import Question, QuestionRetriever
 from course_module import Course
 from subject_module import Subject, SubjectRetriever
-from student_module import Student
+from student_module import Student, StudentAuthentication, StudentRetriever
 
 
 import os
 from werkzeug.utils import secure_filename
 import csv
+import datetime
+import hashlib
 
 if os.path.isdir(os.path.join(os.getcwd(),"uploads")) == False:
     os.makedirs(os.path.join(os.getcwd(),"uploads"))
@@ -20,15 +22,27 @@ app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER']=os.path.join(os.getcwd(),"uploads")
 
-@app.route("/editor")
-def editor():
-    
-    return render_template("editor.html",title="ByteLab | Editor",language="python",question="C Question")
+app.secret_key = "bc9a80d9d724bd875ee5cd1637f87101"
+app.permanent_session_lifetime = datetime.timedelta(days=5)
 
 
 @app.route("/")
 def index():
-    return redirect("/login")
+    try:
+        if session['uucms_no'] != "":
+            if "student" in session['type']:
+                return redirect("/student-dashboard")
+            elif "faculty" in session['type']:
+                return redirect("/faculty-dashboard")
+                
+        else:
+            return redirect("/login")
+    except KeyError:
+        return redirect("/login")
+
+@app.route("/editor")
+def editor():
+    return render_template("editor.html",title="ByteLab | Editor",language="python",question="C Question")
 
 @app.route('/save',methods=["POST"])
 def saveCode():
@@ -39,8 +53,37 @@ def saveCode():
 
 @app.route("/login",methods=["GET","POST"])
 def login_page():
-    return render_template("login_page.html",title="ByteLab | Login")
+    session.permanent = True
+    if request.method == "GET":
+        return render_template("login_page.html",title="ByteLab | Login")
+    
+    elif request.method == "POST":
+        form_data = request.form
+        password = form_data.get('password_login').encode('utf-8')
+        password = hashlib.md5(password).hexdigest()
+        
+        student_auth = StudentAuthentication()
+        student_auth.student.uucms_no = form_data.get('rollno_login')
+        student_auth.password = password
+        
+        auth = student_auth.authenticate()
+        if auth == True:
+            retriever = StudentRetriever()
+            student = Student()
+            retriever.uucms_no = student_auth.student.uucms_no
+            record = retriever.get_by_uucms_no()
+            session['uucms_no'] = record.get("uucms_no")
+            session['student_name'] = record.get('name')
+            session['course'] = record.get('course')
+            session['semester'] = record.get('semester')
+            session['batch'] = record.get('batch')
+            session['password'] = record.get('password') 
+            session['type'] = record.get('type') 
+            del retriever
 
+            return redirect('/')
+        return render_template("login_page.html",title="ByteLab | Login")
+    
 @app.route("/register",methods=["GET","POST"])
 def registration_page():
     if request.method == "GET":
@@ -84,7 +127,7 @@ def add_questions_page():
         record['subject'] = retriever.get_code_by_name()
         del form_data
         question = Question(record['question'],record['semester'],record['programming_language'],record['subject'])
-        question.insert_into_questions_table()
+        question.add_to_db()
 
         return render_template("add_questions.html",title="Manage Questions | Add",page_hero_title="Add Question")
 
@@ -107,6 +150,23 @@ def view_questions_page():
         records = question_retriever.get_by_subject_and_semester(subject=subject,semester=semester)
         
         return render_template("view_questions.html",title="Manage Questions | View",page_hero_title="View Questions",questions=records)
+
+@app.route('/faculty-dashboard/manage-questions/delete',methods=["GET","POST"])
+def delete_questions_page():
+    if request.method == "GET":
+        return render_template("delete_question.html",title="Manage Questions | Delete",page_hero_title="Delete Questions")
+    
+    elif request.method == "POST":
+        
+        form_data = request.form
+        question = Question()
+        question.semester = form_data.get("semester")
+        question_id = form_data.get("question_id")
+        
+        question.remove_from_db(question_id=question_id)
+        print("Question Successfully Removed")
+        
+        return render_template("delete_question.html",title="Manage Questions | Delete",page_hero_title="Delete Questions")
 
 @app.route('/faculty-dashboard/manage-students',methods=['GET','POST'])
 def manage_students_page():
@@ -136,9 +196,10 @@ def add_batch_page():
                 student.course = record.get('course')
                 student.semester = record.get('semester')
                 student.batch = record.get('batch')
+                password = student.generate_student_password()
                 
-                student.add_student_to_db()
-                print("added {student.uucms_no}")
+                student.add_student_to_db(password)
+                print(f"added {student.uucms_no}")
             f.close()
         os.remove(file_path)
         return render_template("add_batch.html",title="Manage Students | Add",page_hero_title="Add Batch")
@@ -157,7 +218,7 @@ def add_course_page():
         course.full_form = form_data.get("course_full_form")    
         course.no_of_sems = form_data.get("no_of_sems")    
         
-        course.insert_into_table()
+        course.add_to_table()
         
         del course, form_data
         
@@ -180,13 +241,35 @@ def add_subject_page():
         subject.semester = form_data.get('semester')
         subject.subject_code = subject.generate_subject_code()
         
-        subject.insert_into_table()
+        subject.add_to_db()
         del form_data
         course = Course()
         course_list = course.list_courses()
         del course
         return render_template("add_subject.html",title="Admin Dashboard | Add Subject",page_hero_title="Add Subject",courses=course_list)
+
+# Student Dashboard Routes
+@app.route('/student-dashboard',methods=["GET","POST"])
+def student_dashboard_page():
+    if request.method == "GET":
+        return render_template("student-dashboard.html",title="ByteLab | Student Dashboard",page_hero_title="Student Dashboard")
+    
+@app.route("/account",methods=["GET","POST"])
+def my_account_page():
+    if request.method == "GET":
+        if "student" in session['type']:
+            record = (session['uucms_no'],session['student_name'],session['course'],session['semester'],session['batch'],session['type'].title())
+            details = list(zip(("UUCMS No","Name","Course","Semester","Batch","Type"),record)) 
+            del record
+            return render_template("account_page.html",title="ByteLab | My Account",page_hero_title="My Account",details=details)
         
+@app.route("/logout",methods=["GET","POST"])
+def logout():
+    if request.method == "GET":
+        session.clear()
+        return redirect("/login")
+         
+                  
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True)
     
