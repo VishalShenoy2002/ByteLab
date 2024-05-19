@@ -1,0 +1,25 @@
+{% extends "dashboard.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<div class="large container">
+    <table class="large">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for account_title, account_details in details %}
+                <tr>
+                    <td style="padding: 0.5rem;text-align: left;">{{ account_title }}</td>
+                    <td style="padding: 0.5rem; text-align: left;">{{ account_details }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<button class="button">
+    <a href="/logout">Logout</a>
+</button>
+{% endblock %}
