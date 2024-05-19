@@ -57,6 +57,7 @@ def create_students_table():
             course VARCHAR(5) NOT NULL,
             semester INT NOT NULL,
             batch INT NOT NULL,
+            password varchar(32) NOT NULL,
             FOREIGN KEY (course) REFERENCES courses(course_name));
             '''
     execute_query(query)
