@@ -11,9 +11,15 @@ class Question:
         self.programming_language = programming_language
         self.subject = subject
     
-    def insert_into_questions_table(self):
+    def add_to_db(self):
         query = f"INSERT INTO questions(question,subject_code,semester,programming_language) VALUES (\"{self.question}\", \"{self.subject}\",{self.semester}, \"{self.programming_language}\");"
         print(query)
+        cursor.execute(query)
+        conn.commit()
+        del query
+        
+    def remove_from_db(self,question_id):
+        query = f'DELETE * FROM questions WHERE question_id = {question_id} AND semester = {self.semester};'
         cursor.execute(query)
         conn.commit()
         del query
