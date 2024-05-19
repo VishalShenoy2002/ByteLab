@@ -10,7 +10,7 @@ class Course:
         self.full_form: str = None
         self.no_of_sems: int = None
         
-    def insert_into_table(self):
+    def add_to_db(self):
         
         query=f'INSERT INTO courses(course_name,full_form,num_of_sems)VALUES("{self.course_name}","{self.full_form}",{self.no_of_sems});'
         cursor.execute(query)
