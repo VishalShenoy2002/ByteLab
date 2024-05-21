@@ -1,0 +1,21 @@
+{% extends "dashboard.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<div class="large container">
+    {% for question in question_list %}
+        <div class="question-card">
+            <div class="row-flex" id="question-content">
+                <label for="">Question:</label>
+                <p>{{ question['Question'] }}</p>
+            </div>
+            <div class="row-flex" id="question-subject">
+                <label for="">Subject:</label>
+                <p>{{ question['Subject'] }}</p>
+            </div>
+            <a href="/student-dashboard/solve-questions/editor/{{ question['Question ID'] }}" class="link">
+                <i class="fa-solid fa-play icon"></i>
+            </a>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
