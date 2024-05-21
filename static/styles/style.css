@@ -255,3 +255,34 @@ tr:last-child {
 .card:hover{
     transform: scale(1.125);
 }
+
+.question-card{
+    display: flex;
+    flex-direction: column;
+
+    /* gap: 0.5rem; */
+    background-color: var(--primary-glass);
+    width: 75%;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+}
+
+#question-content label{
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-align: left;
+    /* justify-self: left; */
+}
+#question-content p{
+    font-size: 1rem;
+    /* text-align: left; */
+}
+
+#question-subject{
+    font-size: 0.8rem;
+}
+
+#question-subject label{
+    font-weight: 800;
+}
