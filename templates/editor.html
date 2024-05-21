@@ -1,12 +1,12 @@
-{% extends "base.html" %}
-{% block title %}{{ title }}{% endblock %}
-{% block body %}
+{% extends "dashboard.html" %}
+{% block main %}
 <div class="row-flex">
 
     <section class="question-section" id="question-section">
-        {{ question }}
+       <p id="question-text">{{ question }}</p>
         <div>
             <label id="language-label">{{ language }}</label>
+            <label id="question-id-label">{{ question_id }}</label>
             
         </div>
     </section>
