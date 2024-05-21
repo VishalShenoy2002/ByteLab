@@ -52,6 +52,7 @@ class QuestionRetriever:
         query = f'SELECT * FROM questions WHERE semester={self.semester};'
         cursor.execute(query)  
         records = cursor.fetchall()
+        records = [dict(zip(("Question ID","Subject","Question","Semester","Prograaming Language"),record)) for record in records]
         
         del query
         return records
@@ -74,3 +75,14 @@ class QuestionRetriever:
 
         del query
         return records
+    
+    def get_by_id(self,question_id:int):
+        self.question_id = question_id
+        query = f'SELECT * FROM questions WHERE question_id={self.question_id};'
+        cursor.execute(query)  
+        
+        record = cursor.fetchone()
+        record = dict(zip(("question_id","subject_code","question","semester","programming_language"),record))
+        
+        return record
+        
