@@ -1,7 +1,10 @@
 require(['vs/editor/editor.main'], function (){
     var codeEditor = document.getElementById('code-editor')
     var languageLabel = document.getElementById('language-label')
+    var questionIdLabel = document.getElementById('question-id-label')
     var language = languageLabel.textContent.toLowerCase()
+    var questionId = questionIdLabel.textContent.toLowerCase()
+    var question = document.getElementById('question-text').textContent.toLowerCase()
     console.log(language)
 
     
@@ -86,12 +89,14 @@ require(['vs/editor/editor.main'], function (){
 
     function sendCodeToFlask(editor){
         var code = editor.getValue()
-        var language = languageSelector.value
-        fetch('/save',{
+        var language = languageLabel.textContent.toLowerCase()
+        fetch('/submit',{
             method: "POST",
             body: new URLSearchParams({
                 code: code,
-                language: language
+                language: language,
+                question_id: questionId,
+                question: question
             }),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -105,8 +110,9 @@ require(['vs/editor/editor.main'], function (){
     
     
     }
-    var submitButton = document.getElementById('submit-code')
+    var submitButton = document.getElementById('submit-button')
     submitButton.addEventListener('click', function () {
+        console.log("click")
         sendCodeToFlask(editor)
     })
 })
