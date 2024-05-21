@@ -7,6 +7,8 @@ from questions_module import Question, QuestionRetriever
 from course_module import Course
 from subject_module import Subject, SubjectRetriever
 from student_module import Student, StudentAuthentication, StudentRetriever
+from submission_module import Submission
+from notification_module import TelegramBot
 
 
 import os
@@ -40,16 +42,42 @@ def index():
     except KeyError:
         return redirect("/login")
 
-@app.route("/editor")
-def editor():
-    return render_template("editor.html",title="ByteLab | Editor",language="python",question="C Question")
 
-@app.route('/save',methods=["POST"])
+@app.route('/submit',methods=["POST"])
 def saveCode():
     code = request.form['code']
     language = request.form['language']
+    question_id = request.form['question_id']
+    question = request.form['question']
     
-    return 'Code saved'
+    print(code.replace(r"\n","\\n"))
+    submission = Submission()
+    submission.student_roll_no = session['uucms_no']
+    submission.semester = session['semester']
+    submission.question_id = question_id
+    submission.programming_language = language
+    submission.submission = code
+    submission.approval_status = "Submitted"
+    
+    bot = TelegramBot()
+    
+    message = f"""
+    Greetings,
+This message is to inform you that {session["student_name"].title()} from {session["course"].upper()} {session["semester"]} semester has jus submitted a lab program.\n\n
+Program Details\n
+Question ID: {question_id}
+Question: {question}
+\n\n
+Student Details
+UUCMS Number: {session["uucms_no"]}
+Student Name: {session["student_name"]}
+    
+    """
+    bot.notify(message)
+    
+    submission.add_to_db()
+    
+    return redirect("student-dashboard/solve-questions")
 
 @app.route("/login",methods=["GET","POST"])
 def login_page():
@@ -253,7 +281,27 @@ def add_subject_page():
 def student_dashboard_page():
     if request.method == "GET":
         return render_template("student-dashboard.html",title="ByteLab | Student Dashboard",page_hero_title="Student Dashboard")
+ 
+@app.route('/student-dashboard/solve-questions',methods=["GET","POST"])
+def solve_questions_page():
     
+    if request.method == "GET":
+        if 'student' in session['type']:
+            retriever = QuestionRetriever()
+            question_list = retriever.get_by_semester(semester=1)
+            print(session['semester'])
+            print(question_list)
+            
+            return render_template("solve-questions.html",title="Student Dashboard | Solve Questions",page_hero_title="Solve Questions",question_list=question_list)  
+
+@app.route('/student-dashboard/solve-questions/editor/<question_id>',methods=["GET","POST"])
+def editor_page(question_id):
+    
+    if request.method == "GET":
+        retriever = QuestionRetriever()
+        question_details = retriever.get_by_id(question_id=question_id)
+        return render_template("editor.html",title="Question | Editor",question=question_details['question'],language=question_details['programming_language'].strip(),question_id=question_id,page_hero_title="Editor")
+
 @app.route("/account",methods=["GET","POST"])
 def my_account_page():
     if request.method == "GET":
