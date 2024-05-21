@@ -1,4 +1,18 @@
 {% extends "dashboard.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% block main %}
+<div class="row-flex" style="gap: 3rem ;">
+    <a href="/student-dashboard/solve-questions" class="link">
+        <div class="card" style="min-width: 175px;">
+            <i class="fa-solid fa-computer icon"></i>
+            <label for="">Solve Questions</label>
+        </div>
+    </a>
+    <a href="/student-dashboard/view-submissions" class="link">
+        <div class="card" style="min-width: 175px;">
+            <i class="fa-solid fa-eye icon"></i>
+            <label for="">View Submission</label>
+        </div>
+    </a>
+</div>
 {% endblock %}
