@@ -4,13 +4,10 @@
 <div class="container">
     <h1>Login</h1>
     <form action="" method="post" class="large">
-        <input type="text" name="rollno_login" id="rollno-login-input" placeholder="UUCMS Registration Number">
-        <input type="password" name="password_login" id="password-login-input" placeholder="Password"><br>
+        <input type="text" name="login_id" id="login-id-input" placeholder="Login ID" required>
+        <input type="password" name="password_login" id="password-login-input" placeholder="Password" required><br>
         <button type="submit" class="button">Login</button>
-        <a href="/register" class="row-flex">
-            <i></i>
-            Don't have an Account
-        </a>
+        <p><b>Note: </b>Login ID for students is UUCMS Registration Number and for Faculties it is Faculty ID</p>
     </form>
 </div>
 {% endblock %}
