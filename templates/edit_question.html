@@ -3,10 +3,39 @@
 {% block main %}
 <div class="large container">
     <form class="large" method="post">
-        <input type="number" name="question_id" id="question-id-input"placeholder="Question ID" class="small">
         <input type="number" name="semester" id="semester-input" min="1" max="6" placeholder="Semester" class="small">
         <input type="text" name="subject" id="subject-input" placeholder="Subject"><br>
-        <button type="submit" class="button">Delete</button>
+        <button type="submit" class="button">View Records</button>
     </form>
+    <br>
+    <h2>Records</h2>
+    {% if questions != [] %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Question ID</th>
+                    <th>Question</th>
+                    <th>Semester</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question_id, subject_code, question, semester, programming_language in questions %}
+                <tr>
+                    <td>{{ question_id }}</td>
+                    <td>{{ question }}</td>
+                    <td>{{ semester }}</td>
+                    <td>
+                        <a href="/faculty-dashboard/manage-questions/edit/{{ question_id }}" class="link">Edit Question</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+    {% else %}
+        <p>No Record Found</p>
+
+    {% endif %}
 </div>
 {% endblock %}
