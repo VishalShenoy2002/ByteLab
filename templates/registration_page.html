@@ -1,18 +1,14 @@
-{% extends "base.html" %}
+{% extends "dashboard.html" %}
 {% block title %}{{ title }}{% endblock %}
-{% block body %}
-<div class="medium container">
-    <h1>Register</h1>
-    <form action="" method="post">
-        <input type="text" name="fullname-registration" id="fullname-registration-input" placeholder="Fullname">
-        <input type="email" name="email-registration" id="email-registration-input" placeholder="Email">
-        <input type="password" name="password-registration" id="password-registration-input" placeholder="Password">
-        <input type="password" name="confirm-password-registration" id="confirm-password-registration-input" placeholder="Confirm Password"><br>
-        <button type="submit" class="button">Register</button>
-        <a href="/login" class="row-flex">
-            <i></i>
-            Have an Account
-        </a>
+{% block main %}
+<div class="large container">
+    <form action="" method="post" class="large">
+        <input type="text" name="faculty_id" id="faculty-id-input" placeholder="Faculty ID" required>
+        <input type="text" name="faculty_name" id="fullname-registration-input" placeholder="Faculty Name" required>
+        <input type="email" name="faculty_email" id="email-registration-input" placeholder="Email" required>
+        <input type="password" name="password" id="password-registration-input" placeholder="Password" required>
+        <input type="password" name="confirm_password" id="confirm-password-registration-input" placeholder="Confirm Password" required><br>
+        <button type="submit" class="button">Add Faculty</button>
     </form>
 </div>
 {% endblock %}
