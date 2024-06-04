@@ -1,7 +1,9 @@
 {% extends "dashboard.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% block main %}
+
 <div class="large container">
+    <p style="font-size: 0.8rem;"><b>Note:</b> Please upload a CSV file containing the following fields in lowercase: <br><b>uucms_no, name, course, semester, batch</b>. The field names are case sensitive.</p>
     <form class="large" method="post" enctype="multipart/form-data">
         <input type="file" name="batch_file" id="batch_file_input" required>
         <button type="submit" class="button">Add Batch</button>
