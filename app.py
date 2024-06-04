@@ -7,7 +7,8 @@ from questions_module import Question, QuestionRetriever
 from course_module import Course
 from subject_module import Subject, SubjectRetriever
 from student_module import Student, StudentAuthentication, StudentRetriever
-from submission_module import Submission
+from faculty_module import Faculty,FacultyAuthentication, FacultyRetriever
+from submission_module import Submission, SubmissionRetriever
 from notification_module import TelegramBot
 
 
@@ -31,7 +32,7 @@ app.permanent_session_lifetime = datetime.timedelta(days=5)
 @app.route("/")
 def index():
     try:
-        if session['uucms_no'] != "":
+        if session['type'] != "":
             if "student" in session['type']:
                 return redirect("/student-dashboard")
             elif "faculty" in session['type']:
@@ -45,24 +46,26 @@ def index():
 
 @app.route('/submit',methods=["POST"])
 def saveCode():
-    code = request.form['code']
-    language = request.form['language']
-    question_id = request.form['question_id']
-    question = request.form['question']
     
-    print(code.replace(r"\n","\\n"))
-    submission = Submission()
-    submission.student_roll_no = session['uucms_no']
-    submission.semester = session['semester']
-    submission.question_id = question_id
-    submission.programming_language = language
-    submission.submission = code
-    submission.approval_status = "Submitted"
-    
-    bot = TelegramBot()
-    
-    message = f"""
-    Greetings,
+    if request.method == "POST":
+        code = request.form['code']
+        language = request.form['language']
+        question_id = request.form['question_id']
+        question = request.form['question']
+        
+        print(code.replace(r"\n","\\n"))
+        submission = Submission()
+        submission.student_roll_no = session['uucms_no']
+        submission.semester = session['semester']
+        submission.question_id = question_id
+        submission.programming_language = language
+        submission.submission = code
+        submission.approval_status = "Submitted"
+        
+        bot = TelegramBot()
+        
+        message = f"""
+Greetings,
 This message is to inform you that {session["student_name"].title()} from {session["course"].upper()} {session["semester"]} semester has jus submitted a lab program.\n\n
 Program Details\n
 Question ID: {question_id}
@@ -71,13 +74,13 @@ Question: {question}
 Student Details
 UUCMS Number: {session["uucms_no"]}
 Student Name: {session["student_name"]}
-    
-    """
-    bot.notify(message)
-    
-    submission.add_to_db()
-    
-    return redirect("student-dashboard/solve-questions")
+        
+        """
+        bot.notify(message)
+        
+        submission.add_to_db()
+        
+        return redirect("student-dashboard/solve-questions")
 
 @app.route("/login",methods=["GET","POST"])
 def login_page():
@@ -87,38 +90,57 @@ def login_page():
     
     elif request.method == "POST":
         form_data = request.form
+        user_type = form_data.get('type')
         password = form_data.get('password_login').encode('utf-8')
         password = hashlib.md5(password).hexdigest()
         
-        student_auth = StudentAuthentication()
-        student_auth.student.uucms_no = form_data.get('rollno_login')
-        student_auth.password = password
-        
-        auth = student_auth.authenticate()
-        if auth == True:
-            retriever = StudentRetriever()
-            student = Student()
-            retriever.uucms_no = student_auth.student.uucms_no
-            record = retriever.get_by_uucms_no()
-            session['uucms_no'] = record.get("uucms_no")
-            session['student_name'] = record.get('name')
-            session['course'] = record.get('course')
-            session['semester'] = record.get('semester')
-            session['batch'] = record.get('batch')
-            session['password'] = record.get('password') 
-            session['type'] = record.get('type') 
-            del retriever
+        if user_type == "student":
+            student_auth = StudentAuthentication()
+            student_auth.student.uucms_no = form_data.get('login_id')
+            student_auth.password = password
+            
+            std_auth = student_auth.authenticate()
+            if std_auth == True:
+                retriever = StudentRetriever()
+                student = Student()
+                retriever.uucms_no = student_auth.student.uucms_no
+                record = retriever.get_by_uucms_no()
+                session['uucms_no'] = record.get("uucms_no")
+                session['student_name'] = record.get('name')
+                session['course'] = record.get('course')
+                session['semester'] = record.get('semester')
+                session['batch'] = record.get('batch')
+                session['password'] = record.get('password') 
+                session['type'] = user_type
+                del retriever
 
-            return redirect('/')
-        return render_template("login_page.html",title="ByteLab | Login")
-    
-@app.route("/register",methods=["GET","POST"])
-def registration_page():
-    if request.method == "GET":
-        return render_template("registration_page.html",title="ByteLab | Registration")
-    
-    elif request.method == "POST":
-        return redirect("/login")
+                return redirect('/')
+            else:
+                return render_template("login_page.html",title="ByteLab | Login")
+            
+        elif user_type == "faculty":
+            faculty_auth = FacultyAuthentication()
+            faculty_auth.faculty.faculty_id = form_data.get('login_id')
+            faculty_auth.password = password
+            
+            fac_auth = faculty_auth.authenticate()
+            
+            if fac_auth == True:
+                retriever = FacultyRetriever()
+                retriever.faculty_id = faculty_auth.faculty.faculty_id
+                record = retriever.get_by_faculty_id()
+                session['faculty_id'] = record.get("faculty_id")
+                session['faculty_name'] = record.get('name')
+                session['department'] = record.get('department')
+                session['email'] = record.get('email')
+                session['password'] = record.get('password') 
+                session['type'] = user_type
+                
+                return redirect('/')
+            else:
+                return render_template("login_page.html",title="ByteLab | Login")
+                
+                
 
 # Dashboard Routes 
 @app.route('/faculty-dashboard',methods=["GET","POST"])
@@ -179,23 +201,44 @@ def view_questions_page():
         
         return render_template("view_questions.html",title="Manage Questions | View",page_hero_title="View Questions",questions=records)
 
-@app.route('/faculty-dashboard/manage-questions/delete',methods=["GET","POST"])
-def delete_questions_page():
+@app.route('/faculty-dashboard/manage-questions/edit',methods=["GET","POST"])
+def edit_questions_page():
     if request.method == "GET":
-        return render_template("delete_question.html",title="Manage Questions | Delete",page_hero_title="Delete Questions")
+        return render_template("edit_question.html",title="Manage Questions | Edit",page_hero_title="Edit Questions",questions=[])
     
     elif request.method == "POST":
         
         form_data = request.form
-        question = Question()
-        question.semester = form_data.get("semester")
-        question_id = form_data.get("question_id")
+        qretriever = QuestionRetriever()
+        sretriever = SubjectRetriever()
         
-        question.remove_from_db(question_id=question_id)
-        print("Question Successfully Removed")
+        sretriever.subject_name = form_data.get('subject')
         
-        return render_template("delete_question.html",title="Manage Questions | Delete",page_hero_title="Delete Questions")
+        semester = form_data.get('semester')
+        subject = sretriever.get_code_by_name()
+        
+        questions = qretriever.get_by_subject_and_semester(subject=subject,semester=semester)
 
+        del qretriever, sretriever
+        return render_template("edit_question.html",title="Manage Questions | Edit",page_hero_title="Edit Questions",questions=questions)
+
+@app.route('/faculty-dashboard/manage-questions/edit/<question_id>',methods=['GET','POST'])
+def question_editor_page(question_id):
+    
+    if request.method == "GET":
+        question_retiever = QuestionRetriever()        
+        details = question_retiever.get_by_id(question_id)
+        print(details)
+        return render_template("question_editor.html",title="Edit Questions | Question Editor",page_hero_title="Question Editor",details=details)
+    
+    elif request.method == "POST":
+        form_data = request.form
+        new_question = form_data.get('question')
+        question = Question()
+        question.edit_question(question_id=question_id,new_question=new_question)
+        
+        return render_template("question_editor.html",title="Edit Questions | Question Editor",page_hero_title="Question Editor",details="")
+        
 @app.route('/faculty-dashboard/manage-students',methods=['GET','POST'])
 def manage_students_page():
     if request.method == "GET":
@@ -232,7 +275,46 @@ def add_batch_page():
         os.remove(file_path)
         return render_template("add_batch.html",title="Manage Students | Add",page_hero_title="Add Batch")
 
+@app.route('/faculty-dashboard/manage-students/view',methods=['GET','POST'])
+def view_batch_page():
+    if request.method == "GET":
+        retriever = StudentRetriever()
+        batches = retriever.get_batch_details()
+        return render_template("view-batch.html",title="Manage Students | View",page_hero_title="View Batch",batches=batches)
+       
+@app.route('/faculty-dashboard/manage-students/view/<course>-<batch>',methods=['GET','POST'])
+def view_students_page(course,batch):
+    if request.method == "GET":
+        retriever = StudentRetriever()
+        # print(type(batch),batch,type(course),course)
+        student_list = retriever.get_by_batch(batch=int(batch),course=course.strip())
+        # print(student_list)
         
+        return render_template("view-students.html",title="View | Students",page_hero_title="View Students",student_list=student_list)
+
+@app.route('/faculty-dashboard/reporting-and-analysis',methods=["GET","POST"])
+def report_and_analysis_page():
+    if request.method == "GET":
+        return render_template("report_and_analysis_page.html",title="Faculty Dashboard | Report & Analysis",page_hero_title="Report and Analysis")
+
+@app.route("/faculty-dashboard/view-submissions",methods=["GET","POST"])
+@app.route("/student-dashboard/view-submissions",methods=["GET","POST"])
+def view_submissions_page():
+    if request.method == "GET":
+        if "student" in session['type']:
+            retriever = SubmissionRetriever()
+            records = retriever.get_by_student(session['uucms_no'])
+            print(records)
+            return render_template("submissions_page.html",title="Student Dashboard | View Submission",page_hero_title="View Submissions",submission_list=records)
+        
+        elif "faculty" in session['type']:
+            retriever = SubmissionRetriever()
+            records = retriever.get_by_semester(6)
+            return render_template("submissions_page.html",title="Faculty Dashboard | View Submission",page_hero_title="View Submissions",submission_list=records)
+            
+    # else:
+    #     return render_template("submissions_page.html",title="Student Dashboard | View Submission",page_hero_title="View Submissions",submission_list=[])
+
 # Admin Dashboard Routes
 @app.route('/admin-dashboard/add-course',methods=["GET","POST"])
 def add_course_page():
@@ -251,6 +333,7 @@ def add_course_page():
         del course, form_data
         
         return render_template("add_course.html",title="Admin Dashboard | Add Course",page_hero_title="Add Course")
+
 
 @app.route('/admin-dashboard/add-subject',methods=["GET","POST"])  
 def add_subject_page():
@@ -275,6 +358,31 @@ def add_subject_page():
         course_list = course.list_courses()
         del course
         return render_template("add_subject.html",title="Admin Dashboard | Add Subject",page_hero_title="Add Subject",courses=course_list)
+
+
+@app.route('/admin-dashboard/add-faculty',methods=["GET","POST"])
+def add_faculty_page():
+    if request.method == "GET":
+        return render_template("registration_page.html",title="Admin Dashboard | Add Faculty",page_hero_title="Add Faculty")
+    
+    elif request.method == "POST":
+        form_data = request.form
+        faculty = Faculty()
+        faculty.department = "BCA"
+        faculty.faculty_id = form_data.get('faculty_id')
+        faculty.name = form_data.get('faculty_name')
+        faculty.email = form_data.get('faculty_email')
+        
+        password = form_data.get('password')
+        confirm_password =  form_data.get('confirm_password')
+        
+        
+        if password == confirm_password:
+            hashed_password = hashlib.md5(password.encode("utf-8")).hexdigest()
+            faculty.password = hashed_password
+            
+        faculty.add_to_db()
+        return redirect('/admin-dashboard')
 
 # Student Dashboard Routes
 @app.route('/student-dashboard',methods=["GET","POST"])
@@ -301,6 +409,9 @@ def editor_page(question_id):
         retriever = QuestionRetriever()
         question_details = retriever.get_by_id(question_id=question_id)
         return render_template("editor.html",title="Question | Editor",question=question_details['question'],language=question_details['programming_language'].strip(),question_id=question_id,page_hero_title="Editor")
+    
+    elif request.method == "POST":
+        return redirect("/student-dashboard/solve-questions")
 
 @app.route("/account",methods=["GET","POST"])
 def my_account_page():
@@ -310,6 +421,14 @@ def my_account_page():
             details = list(zip(("UUCMS No","Name","Course","Semester","Batch","Type"),record)) 
             del record
             return render_template("account_page.html",title="ByteLab | My Account",page_hero_title="My Account",details=details)
+        
+        elif "faculty" in session['type']:
+            record = (session['faculty_id'],session['faculty_name'],session['department'],session['email'],session['type'].title())
+            details = list(zip(("Faculty ID","Name","Department","Email","Type"),record)) 
+            del record
+            return render_template("account_page.html",title="ByteLab | My Account",page_hero_title="My Account",details=details)
+            
+            
         
 @app.route("/logout",methods=["GET","POST"])
 def logout():
