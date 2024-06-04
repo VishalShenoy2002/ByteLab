@@ -3,11 +3,16 @@
 {% block body %}
 <div class="container">
     <h1>Login</h1>
+    <p style="font-size: 0.75rem;"><b>Note: </b>Login ID for students is UUCMS Registration Number and for Faculties it is Faculty ID</p>
     <form action="" method="post" class="large">
+        <div class="row-flex">
+            <input type="radio" name="type" id="student-type-input" value="student">Student <br>
+            <input type="radio" name="type" id="student-type-input" value="faculty">Faculty
+
+        </div>
         <input type="text" name="login_id" id="login-id-input" placeholder="Login ID" required>
         <input type="password" name="password_login" id="password-login-input" placeholder="Password" required><br>
         <button type="submit" class="button">Login</button>
-        <p><b>Note: </b>Login ID for students is UUCMS Registration Number and for Faculties it is Faculty ID</p>
     </form>
 </div>
 {% endblock %}
