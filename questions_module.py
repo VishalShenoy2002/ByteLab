@@ -5,7 +5,7 @@ cursor = conn.cursor()
 
 class Question:
     
-    def __init__(self,question:str, semester:int, programming_language:str, subject:str) -> None:
+    def __init__(self,question:str = None, semester:int = None, programming_language:str = None, subject:str = None) -> None:
         self.question = question
         self.semester = semester
         self.programming_language = programming_language
@@ -19,9 +19,16 @@ class Question:
         del query
         
     def remove_from_db(self,question_id):
-        query = f'DELETE * FROM questions WHERE question_id = {question_id} AND semester = {self.semester};'
+        query = f'DELETE FROM questions WHERE question_id={question_id} AND semester={self.semester};'
         cursor.execute(query)
         conn.commit()
+        del query
+        
+    def edit_question(self,question_id,new_question):
+        query = f'UPDATE questions SET question="{new_question}" WHERE question_id={question_id};'
+        cursor.execute(query)
+        conn.commit()
+        print("Updated")
         del query
         
 class QuestionRetriever:
