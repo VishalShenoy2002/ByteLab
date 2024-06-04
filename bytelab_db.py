@@ -94,13 +94,30 @@ def create_subject_table():
     execute_query(query)
     del query
     
-
-create_batch_table()
-create_courses_table()
-create_subject_table()
-create_students_table()
-create_questions_table()
-create_submission_table()
+    
+def create_faculty_table():
+    print('[*] Creating Faculty Table')
+    query='''
+    CREATE TABLE IF NOT EXISTS faculty (
+        faculty_id VARCHAR(25) NOT NULL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        department VARCHAR(5) NOT NULL,
+        email VARCHAR(50) NOT NULL,
+        password VARCHAR(32) NOT NULL,
+        FOREIGN KEY (department) REFERENCES courses (course_name));
+    '''
+    execute_query(query)
+    del query
+    
+    
+if __name__ == "__main__":
+    create_batch_table()
+    create_courses_table()
+    create_subject_table()
+    create_students_table()
+    create_questions_table()
+    create_submission_table()
+    create_faculty_table()
     
 conn.commit()
 conn.close()
