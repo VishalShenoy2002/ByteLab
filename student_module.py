@@ -61,5 +61,26 @@ class StudentRetriever:
         record = tuple(list(record) + [self.type])
         record = dict(zip(("uucms_no","name","course","semester","batch","password","type"),record))
         return record
+    
+    def get_batch_details(self):
+        
+        query = f'SELECT DISTINCT(batch), course FROM students;'
+        cursor.execute(query)
+        
+        del query
+        record = [dict(zip(("Batch","Course"),(batch,course))) for batch,course in cursor.fetchall()]
+        return record
+
+    def get_by_batch(self,batch:int,course:str):
+        
+        query = f'SELECT uucms_no,name,course,batch FROM students WHERE batch={batch} AND course="{course}";'
+        cursor.execute(query)
+        
+        records = cursor.fetchall()
+        # print(records)
+        records = [dict(zip(("UUCMS No","Name","Course","Batch"),(uucms_no,name,course,batch))) for uucms_no,name,course,batch in records]
+        # records =
+        
+        return records
         
         
