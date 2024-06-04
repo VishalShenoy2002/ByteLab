@@ -1,0 +1,32 @@
+{% extends "dashboard.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<div class="large container">
+    {% if submission_list != [] %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Submission Timestamp</th>
+                    <th>Roll Number</th>
+                    <th>Semester</th>
+                    <th>Question Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- submission_date,student_roll_no,semester,question_number -->
+                {% for submission in submission_list %}
+                <tr>
+                    <td>{{ submission['Submission Timestamp'] }}</td>
+                    <td>{{ submission['Roll Number'] }}</td>
+                    <td>{{ submission['Semester'] }}</td>
+                    <td>{{ submission['Question Number'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No Record Found</p>
+    {% endif %}
+    
+</div>
+{% endblock %}
