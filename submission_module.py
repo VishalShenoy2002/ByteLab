@@ -26,19 +26,40 @@ class SubmissionRetriever:
         pass
     
     def get_latest_by_semester(self,semester:int):
-        pass
+        
+        query = f'SELECT submission_date,student_roll_no,semester,question_number FROM submissions WHERE semester={semester} ORDER BY submission_date DESC LIMIT 10;'
+        cursor.execute(query)
+        
+        records = cursor.fetchall()
+        records = [dict(zip(("Submission Timestamp","Roll Number","Semester","Question Number"),(submission_date,student_roll_no,semester,question_number))) for submission_date,student_roll_no,semester,question_number in records]
+        return records
     
     def get_lastet_by_student(self,roll_no:str):
-        pass
-    
-    def ger_lastest_by_subject(self,subject_code:str):
-        pass
-    
-    def get_by_semester(self,semester:int):
-        pass
+        
+        query = f'SELECT submission_date,student_roll_no,semester,question_number FROM submissions WHERE student_roll_no="{roll_no}" ORDER BY submission_date DESC LIMIT 10;'
+        print(query)
+        cursor.execute(query)
+        records = cursor.fetchall()
+        records = [dict(zip(("Submission Timestamp","Roll Number","Semester","Question Number"),(submission_date,student_roll_no,semester,question_number))) for submission_date,student_roll_no,semester,question_number in records]
+        return records     
     
     def get_by_student(self,roll_no:str):
-        pass
+        query = f'SELECT submission_date,student_roll_no,semester,question_number FROM submissions WHERE student_roll_no="{roll_no}" ORDER BY submission_date DESC;'
+        cursor.execute(query)
+        
+        records = cursor.fetchall() 
+        records = [dict(zip(("Submission Timestamp","Roll Number","Semester","Question Number"),(submission_date,student_roll_no,semester,question_number))) for submission_date,student_roll_no,semester,question_number in records]
+        print(records)
+        return records     
+
     
-    def get_by_subject(self,subject_code:str):
-        pass
+    def get_by_semester(self,semster:int):
+        query = f'SELECT submission_date,student_roll_no,semester,question_number FROM submissions WHERE semester={semster} ORDER BY submission_date DESC;'
+        cursor.execute(query)
+        
+        records = cursor.fetchall() 
+        records = [dict(zip(("Submission Timestamp","Roll Number","Semester","Question Number"),(submission_date,student_roll_no,semester,question_number))) for submission_date,student_roll_no,semester,question_number in records]
+        
+        
+        return records     
+    
