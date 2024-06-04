@@ -3,10 +3,10 @@
 {% block main %}
 <div class="large container">
     <form class="large" method="post">
-        <textarea name="question" id="question_input" class="large" placeholder="Question"></textarea><br>
-        <input type="text" name="semester" id="semester_input" placeholder="Semester"><br>
-        <input type="text" name="programming_language" id="programming_language_input" placeholder="Programming Language"><br>
-        <input type="text" name="subject" id="subject_input" placeholder="Subject"><br>
+        <textarea name="question" id="question_input" class="large" placeholder="Question" required></textarea><br>
+        <input type="text" name="semester" id="semester_input" placeholder="Semester" required><br>
+        <input type="text" name="programming_language" id="programming_language_input" placeholder="Programming Language" required><br>
+        <input type="text" name="subject" id="subject_input" placeholder="Subject" required><br>
         <button type="submit" class="button">Add Question</button>
     </form>
 </div>
