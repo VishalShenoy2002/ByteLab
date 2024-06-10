@@ -2,6 +2,7 @@
 @import url("./input-styles.css");
 @import url("./webkits.css");
 @import url("./imports.css");
+@import url('./loader.css');
 
 html{
     scroll-behavior: smooth;
@@ -47,6 +48,7 @@ thead {
     color: var(--primary);
     border-collapse: collapse;
     padding: 1rem;
+    background-color: transparent;
 }
 
 thead th {
@@ -77,10 +79,13 @@ tr:last-child {
     flex-direction: column;
     background-color: transparent;
     font-family: var(--font-family-02);
+    text-align: left;
+    font-size: 1rem;
 }
 
 .container h1, .container h2, .container h3{
     font-family: var(--font-family-01);
+    text-align: center;
 }
 
 .container form{
@@ -285,4 +290,9 @@ tr:last-child {
 
 #question-subject label{
     font-weight: 800;
+}
+
+#report-container p{
+    font-size: 1rem;
+    text-align: left;
 }
