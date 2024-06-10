@@ -17,7 +17,7 @@ input[type="email"]::placeholder, input[type="text"]::placeholder, input[type="p
 }
 
 input[type="radio"], input[type="checkbox"]{
-    accent-color: var(--primary);
+    accent-color: var(--accent);
     width: 1rem;
     height: 1rem;
     font-size: 1rem;
