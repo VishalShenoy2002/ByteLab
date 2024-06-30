@@ -1,0 +1,29 @@
+{% extends "dashboard.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<div class="large container">
+    {% if student_list != [] %}
+        <table>
+            <thead>
+                <tr>
+                    <th>UUCMS No.</th>
+                    <th>Student Name</th>
+                    <th>Performance Report Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in student_list %}
+                <tr>
+                    <td>{{ student['UUCMS No'] }}</td>
+                    <td>{{ student['Name'] }}</td>
+                    <td style="text-align: center;">
+                        <a href="/faculty-dashboard/reporting-and-analysis/view/{{ student['Course'] }}-{{ student['Batch'] }}/{{ student['UUCMS No'] }}-report" class="link">View Report</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    
+</div>
+{% endblock %}
