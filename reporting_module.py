@@ -1,7 +1,8 @@
 from groq import Groq
 import mysql.connector as mysql
 import markdown
-from fpdf import FPDF
+import model
+
 
 conn = mysql.connect(host="localhost",user="root",passwd="asdasd123",database="bytelab")
 cursor = conn.cursor()
@@ -25,33 +26,25 @@ class ReportGenerator:
         # print(records)
         return records
     def _generate_report_text(self):
-        messages = [
-            {
-                "role": "system",
-                "content": "Analyze the provided list of Python dictionaries containing student details, submission dates, and codes. Generate a report in Markdown format with a general overview, detailed analysis (including number of submissions by date and by question ID), notable observations, recommendations, and conclusion."
-            },
-            {
-                "role": "user",
-                "content": str(self.get_by_uucms_no())
-            }
-        ]
-        details = self.ai.chat.completions.create(messages=messages,model="mixtral-8x7b-32768",temperature=0.5,max_tokens=15000)
+        details = self.get_by_uucms_no()
+        overview = model.generate_overview(details)
+        code_recommendation = model.generate_code_recommendations(details)
+        general_observation = model.generate_common_observation(details)
+        strength_and_weakness= model.generate_strength_and_weakness(details)
+
         
-        return details.choices[0].message.content
+        text = model.format_output(overview,code_recommendation,general_observation,strength_and_weakness)
+        
+        return text
     
     def generate_report(self):
         markdown_text = self._generate_report_text()
         
         html_text = markdown.markdown(markdown_text)
-        
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.write_html(html_text)
-        pdf.output("output.pdf")
+
        
     
         
-        
-        
+
         
     
