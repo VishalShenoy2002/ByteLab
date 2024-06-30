@@ -2,21 +2,23 @@
 {% block main %}
 <div class="row-flex">
 
-    <section class="question-section" id="question-section">
-       <p id="question-text">{{ question }}</p>
+    <section class="question-section" id="question-section" style="align-self: first baseline; ">
+       <p id="question-text"><b>Question:</b><br>{{ question }}</p>
         <div>
-            <label id="language-label">{{ language }}</label>
+            <b>Language: </b>
+            <label id="language-label">{{ language }}</label><br>
+            <b>Question ID: </b>
             <label id="question-id-label">{{ question_id }}</label>
             
-        </div>
+        </div><br><br>
+        <button class="button" id="submit-button">
+            <label for="">Submit</label>
+            <i class="fa-solid fa-circle-arrow-right"></i>
+        </button>
     </section>
     <section class="code-section" id="code-section">
         <div class="code-editor" id="code-editor"></div>
         
-        <button class="small button" id="submit-button">
-            <label for="">Submit</label>
-            <i class="fa-solid fa-circle-arrow-right"></i>
-        </button>
 
     </section>
 </div>
