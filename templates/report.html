@@ -1,0 +1,7 @@
+{% extends "dashboard.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+<div class="large container" id="report-container">
+    {{ report | safe }}
+</div>
+{% endblock %}
