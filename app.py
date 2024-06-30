@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template
+from flask import render_template, render_template_string
 from flask import request, redirect
 from flask import session
 
@@ -9,6 +9,7 @@ from subject_module import Subject, SubjectRetriever
 from student_module import Student, StudentAuthentication, StudentRetriever
 from faculty_module import Faculty,FacultyAuthentication, FacultyRetriever
 from submission_module import Submission, SubmissionRetriever
+from reporting_module import ReportGenerator
 from notification_module import TelegramBot
 
 
@@ -33,10 +34,13 @@ app.permanent_session_lifetime = datetime.timedelta(days=5)
 def index():
     try:
         if session['type'] != "":
+            
             if "student" in session['type']:
                 return redirect("/student-dashboard")
             elif "faculty" in session['type']:
                 return redirect("/faculty-dashboard")
+            elif "admin" in session['type']:
+                return redirect('/admin-dashboard')
                 
         else:
             return redirect("/login")
@@ -93,6 +97,10 @@ def login_page():
         user_type = form_data.get('type')
         password = form_data.get('password_login').encode('utf-8')
         password = hashlib.md5(password).hexdigest()
+        
+        if form_data.get('login_id') == "admin" and password == hashlib.md5("admin".encode('utf-8')).hexdigest():
+            session['type'] = "admin"
+            return redirect('/')
         
         if user_type == "student":
             student_auth = StudentAuthentication()
@@ -295,8 +303,32 @@ def view_students_page(course,batch):
 @app.route('/faculty-dashboard/reporting-and-analysis',methods=["GET","POST"])
 def report_and_analysis_page():
     if request.method == "GET":
-        return render_template("report_and_analysis_page.html",title="Faculty Dashboard | Report & Analysis",page_hero_title="Report and Analysis")
+        retriever = StudentRetriever()
+        batches = retriever.get_batch_details()
+        return render_template("report_and_analysis_page.html",title="Report And Analysis | View Students",page_hero_title="Report and Analysis",batches=batches)
 
+
+@app.route('/faculty-dashboard/reporting-and-analysis/view/<course>-<batch>',methods=['GET','POST'])
+def student_report_list_page(course,batch):
+    if request.method == "GET":
+        retriever = StudentRetriever()
+        # print(type(batch),batch,type(course),course)
+        student_list = retriever.get_by_batch(batch=int(batch),course=course.strip())
+        # print(student_list)
+        
+        return render_template("student-report-list.html",title="View | Students",page_hero_title="View Students",student_list=student_list)
+    
+@app.route('/faculty-dashboard/reporting-and-analysis/view/<course>-<batch>/<uucms_no>-report')
+def show_report(uucms_no,course,batch):
+    if request.method == "GET":
+        generator = ReportGenerator()
+        generator.uucms_no = uucms_no
+        report=generator._generate_report_text()
+
+        report_html = render_template("report.html",title=f"Report and Analysis | Report",page_hero_title="Report",report=report)
+        return report_html
+    
+    
 @app.route("/faculty-dashboard/view-submissions",methods=["GET","POST"])
 @app.route("/student-dashboard/view-submissions",methods=["GET","POST"])
 def view_submissions_page():
@@ -427,7 +459,10 @@ def my_account_page():
             details = list(zip(("Faculty ID","Name","Department","Email","Type"),record)) 
             del record
             return render_template("account_page.html",title="ByteLab | My Account",page_hero_title="My Account",details=details)
-            
+        
+        elif "admin" in session['type']:
+            print()
+            return render_template("account_page.html",title="ByteLab | My Account",page_hero_title="My Account",details=list(zip(['Account Type'],['Admin'])))
             
         
 @app.route("/logout",methods=["GET","POST"])
