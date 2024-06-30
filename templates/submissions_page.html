@@ -10,16 +10,24 @@
                     <th>Roll Number</th>
                     <th>Semester</th>
                     <th>Question Number</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- submission_date,student_roll_no,semester,question_number -->
+                    <!-- {% if "faculty" in  session["type"] %}
+                        <th>Approve</th>
+                    {% endif %} -->
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <!-- submission_date,student_roll_no,semester,question_number -->
                 {% for submission in submission_list %}
                 <tr>
                     <td>{{ submission['Submission Timestamp'] }}</td>
                     <td>{{ submission['Roll Number'] }}</td>
                     <td>{{ submission['Semester'] }}</td>
                     <td>{{ submission['Question Number'] }}</td>
+                    <!-- {% if "faculty" in  session["type"] %}
+                        <td>
+                            <a href="/approve-question">Approve</a>
+                        </td>
+                    {% endif %} -->
                 </tr>
                 {% endfor %}
             </tbody>
