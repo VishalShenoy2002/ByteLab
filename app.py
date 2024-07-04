@@ -10,7 +10,8 @@ from student_module import Student, StudentAuthentication, StudentRetriever
 from faculty_module import Faculty,FacultyAuthentication, FacultyRetriever
 from submission_module import Submission, SubmissionRetriever
 from reporting_module import ReportGenerator
-from notification_module import TelegramBot
+# from notification_module import TelegramBot
+from notification_module import EmailBot
 
 
 import os
@@ -66,8 +67,7 @@ def saveCode():
         submission.submission = code
         submission.approval_status = "Submitted"
         
-        bot = TelegramBot()
-        
+        # bot = TelegramBot()
         message = f"""
 Greetings,
 This message is to inform you that {session["student_name"].title()} from {session["course"].upper()} {session["semester"]} semester has jus submitted a lab program.\n\n
@@ -80,9 +80,23 @@ UUCMS Number: {session["uucms_no"]}
 Student Name: {session["student_name"]}
         
         """
-        bot.notify(message)
         
         submission.add_to_db()
+        
+        faculty_retriver = FacultyRetriever()
+        emails = faculty_retriver.get_faculty_email()
+        bot = EmailBot()
+        bot._email_id = "bytelab185@gmail.com"
+        bot._app_password = "cvih zoet supy uoap"
+        
+        bot.login()
+        for email_id in emails:
+            mail = bot.create_mail(email_id,subject=f'{session["uucms_no"]} Submission',message=message)
+            bot.send_mail(to=email_id,mail=mail)
+        
+        bot.close()
+        # bot.notify(message)
+        
         
         return redirect("student-dashboard/solve-questions")
 
@@ -360,7 +374,7 @@ def add_course_page():
         course.full_form = form_data.get("course_full_form")    
         course.no_of_sems = form_data.get("no_of_sems")    
         
-        course.add_to_table()
+        course.add_to_db()
         
         del course, form_data
         
