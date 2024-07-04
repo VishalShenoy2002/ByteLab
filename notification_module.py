@@ -1,6 +1,6 @@
 import smtplib
-import telegram
-from telegram.bot import Bot
+# import telegram
+# from telegram.bot import Bot
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import ssl
@@ -9,21 +9,21 @@ import ssl
 MAIL_CONTEXT = ssl.create_default_context()
 BOT_TOKEN = "6896748585:AAHZFcsFzHo3SMgUr8vKEh4GmoISDrsq_30"
 
-class TelegramBot:
+# class TelegramBot:
     
-    def __init__(self) -> None:
-        self._token = BOT_TOKEN
-        self.bot = Bot(token=self._token)
+#     def __init__(self) -> None:
+#         self._token = BOT_TOKEN
+#         self.bot = Bot(token=self._token)
         
-        self.chat_id = -1002094775831
+#         self.chat_id = -1002094775831
         
-    def notify(self,message:str):
+#     def notify(self,message:str):
         
-        self.bot.send_message(self.chat_id,message)
+#         self.bot.send_message(self.chat_id,message)
         
-    def notify_with_document(self,document:str,message:str):
-        self.bot.send_document(self.chat_id,document)
-        self.bot.send_message(self.chat_id,message)
+#     def notify_with_document(self,document:str,message:str):
+#         self.bot.send_document(self.chat_id,document)
+#         self.bot.send_message(self.chat_id,message)
         
         
 class EmailBot:
