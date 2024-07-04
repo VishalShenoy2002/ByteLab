@@ -1,6 +1,4 @@
 import mysql.connector as mysql
-import hashlib
-
 conn = mysql.connect(host="localhost",user="root",passwd="asdasd123",database="bytelab")
 cursor = conn.cursor()
 
@@ -54,5 +52,15 @@ class FacultyRetriever:
         record = tuple(list(record) + [self.type])
         record = dict(zip(("faculty_id","name","department","email","password","type"),record))
         return record
+    
+    def get_faculty_email(self):
         
+        query = 'SELECT email FROM faculty;'
+        cursor.execute(query)
+        
+        del query
+        
+        records = cursor.fetchall()
+        print(records)
+        return records        
         
